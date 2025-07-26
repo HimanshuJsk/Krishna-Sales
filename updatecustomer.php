@@ -1,0 +1,147 @@
+<?php
+    include 'connect.php';
+    $id = $_GET['updateid'];
+
+    // Fetch existing data
+    $sql = "SELECT * FROM `contact` WHERE id=$id";
+    $result = mysqli_query($con, $sql);
+    $row = mysqli_fetch_assoc($result);
+
+    $email = $row['email'];
+    $mobileno = $row['mobileno'];
+    $productname = $row['productname'];
+    $complaint = $row['complaint'];
+
+    if (isset($_POST['submit'])) {
+        $email = $_POST['email'];
+        $mobileno = $_POST['mobileno'];
+        $productname = $_POST['productname'];
+        $complaint = $_POST['complaint'];
+
+        $sql = "UPDATE `contact` SET email='$email', mobileno='$mobileno', productname='$productname', complaint='$complaint' WHERE id=$id";
+
+        $result = mysqli_query($con, $sql);
+        if ($result) {
+            header("Location: customer.php");
+        } else {
+            die(mysqli_error($con));
+        }
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Update</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <script src="https://kit.fontawesome.com/dbed6b6114.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
+    <link rel="icon" type="image/x-icon" href="img/nav/kss2.png">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            color: black;
+            font-size: 15px;
+            background: #f8f9fa;
+            padding: 30px 0;
+        }
+        .card{
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        label {
+            font-weight: 500;
+        }
+
+        @media(max-width: 576px) {
+            form {
+                padding: 20px !important;
+            }
+            h2 {
+                font-size: 24px !important;
+            }
+        }
+    </style>
+    <script>
+        function validateform() {
+            var email = document.contactform.email.value;
+            var mobileno = document.contactform.mobileno.value;
+            var productname = document.contactform.productname.value;
+            var complaint = document.contactform.complaint.value;
+
+            if (email == null || email == "") {
+                alert("E-mail can't be blank");
+                return false;
+            } else if (mobileno.length != 10) {
+                alert("Mobile number should be of 10 digits!");
+                return false;
+            } else if (productname == null || productname == "") {
+                alert("Product Name can't be blank");
+                return false;
+            } else if (complaint == null || complaint == "") {
+                alert("Complaint No can't be blank");
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4"><u>Update Contact Information</u></h3>
+                        <form method="post" name="contactform" onsubmit="return validateform()">
+                            <div class="form-group mb-3">
+                                <label for="email">E-mail:</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter E-mail" value="<?php echo $email; ?>">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="mobileno">Mobile No:</label>
+                                <input type="number" class="form-control" id="mobileno" name="mobileno" placeholder="Enter Mobile No" value="<?php echo $mobileno; ?>">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="productname">Product Name:</label>
+                                <input type="text" class="form-control" id="productname" name="productname" placeholder="Enter Product Name" value="<?php echo $productname; ?>">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="complaint">Complaint:</label>
+                                <textarea class="form-control" id="complaint" name="complaint" placeholder="Enter Complaint"><?php echo $complaint; ?></textarea>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+                            <button class="btn btn-primary btn-block" type="submit" name="submit">Update</button>
+                            <button class="btn btn-danger btn-block" type="reset" name="reset">Reset</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
